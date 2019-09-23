@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Text Conference</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <center><h1 id="title"><span class="large">S</span>hare<span class="large">B</span>oard</h1></center>
+        <div class="container">
+            <center><h3 id="fontClass">Room: <%= room %></h3></center>
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#text">Text</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#drawing">Drawing</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#files">Files</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="navSetting" data-toggle="tab" href="#setting">Settings</a>
+                </li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div id="text" class="container tab-pane active"><br>
+                    <h3>Text</h3><br>
+					<textarea class="form-control rounded-lg" rows="50" id="message" placeholder="Place to write" disabled></textarea>
+                    <!--<div id="message" placeholder="Place to write" ></div>-->
+                </div>
+                <div id="drawing" class="container tab-pane fade"><br>
+                    <h3>Drawing Space</h3>
+                    <p>Coming Soon...</p>
+					<canvas id="paper" width="900" height="500">
+						Your browser needs to support canvas for this to work!
+					</canvas>
+					<hgroup id="instructions">
+						<h3>Draw anywhere!</h3>
+						<h3>You will see everyone else who's doing the same.</h3>
+						<h3>Tip: if the stage gets dirty, simply reload the page</h3>
+					</hgroup>
+                </div>
+                <div id="files" class="container tab-pane fade"><br>
+                    <h3>Files</h3>
+                    <table class="table">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>File Name</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            
+                        </tbody>
+                    </table>
+                </div>
+                <div id="setting" class="container tab-pane fade"><br>
+                    <h3>Settings</h3><br>
+                    <input type="button" id="leave" value="Leave" class="btn btn-danger">
+                </div>
+            </div>
+        </div>
+    </body>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Over+the+Rainbow" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <style type="text/css">
+        #title {
+            font-family: 'Over the Rainbow';
+            margin-top: 20px;
+        }
+        #fontClass {
+            font-family: 'Over the Rainbow';
+        }
+        .large {
+            font-size: 70px;
+        }
+        #conference-area {
+            overflow-wrap: break-word;
+        }
+        .material-icons {
+            cursor: pointer;
+            color: black;
+        }
+        .material-icons:hover {
+            color: green;
+        }
+    </style>
+    <script>
+        $(function(){
+			var socket = io.connect();
+			var message = $('#message');
+			socket.on('connect', function() {
+				socket.emit('adduser', {});
+            });
+			socket.on('typing',function(data){
+				message.html(data.msg);			
+			});
+		});
+    </script>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Text Conference</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Over+the+Rainbow" rel="stylesheet">
+    	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+	    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>	    
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js"></script>
+	    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    </head>
+    <body>
+        <center><h1 id="title"><span class="large">S</span>hare<span class="large">B</span>oard</h1></center>
+        <div class="container">
+            <center><h3 id="fontClass">Room: <%= room %></h3></center>
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="navText" data-toggle="tab" href="#typing">Text</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="navDrawing" data-toggle="tab" href="#drawing">Drawing</a>
+                    
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="navFiles" data-toggle="tab" href="#files">Files</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="navSetting" data-toggle="tab" href="#setting">Settings</a>
+                </li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div id="typing" class="container tab-pane active"><br>
+                    <div class="form-group">
+                        <h3>Place to write: </h3>
+                        <textarea class="form-control rounded-lg" rows="50" id="message" placeholder="Place to write"></textarea>
+                    </div>
+                </div>
+                <div id="drawing" class="container tab-pane fade"><br>
+                    <h3>Drawing Space</h3>
+                    <div id="sidebar">
+						<div class="toolsButtons">
+							<h3>Tools</h3>
+							<div class="input-group">
+								<input type="color" id="colorpicker" value="#000000" class="colorpicker">
+							</div>
+							<button id="pencil" class="btn btn-default"><i class='fas fa-pencil-alt'></i></button>
+							<button id="eraser" class="btn btn-default"><i class='fas fa-eraser'></i></button>
+							<button id="rectangle" class="btn btn-default"><i class='far fa-square'></i></button>
+							<button id="cir" class="btn btn-default"><i class='far fa-circle'></i></button>
+							<button id="clearCanvas" class="btn btn-danger" style="margin-top: 5px;"> <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></button><br>
+							<div class="input-group">
+								<span class="input-group-addon">Stroke</span>
+								<input type="number" id="strokeValue" class="form-control" placeholder="sizeX" value="2" class="size">
+							</div>
+							<div class="input-group">
+								<a class="btn btn-success" id="download">Download</a>
+							</div>
+						</div>
+					</div>
+					<div id="canvas-holder" class="canvas-holder"></div>
+                </div>
+                <div id="files" class="container tab-pane fade"><br>
+                    <h3>Files</h3>
+                    <form method="post" id="fileForm" action="/" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <input type="file" name="file" class="form-control" multiple="true" autocomplete="off" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="button" class="btn btn-info" id="upload" value="Upload">
+                        </div>
+                    </form>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" style="width:100%;"><div>Uploading...</div></div>
+                    </div>
+                    <div class="alert alert-danger">
+                        <strong>File name must not contain any space.</strong>
+                    </div><br>
+                    <table class="table">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Firstname</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            
+                        </tbody>
+                    </table>
+                </div>
+                <div id="setting" class="container tab-pane fade"><br>
+                    <h3>Settings</h3><br>
+                    <input type="button" id="leave" value="Leave" class="btn btn-danger">
+                </div>
+            </div>
+        </div>
+    </body>
+    <style type="text/css">
+        #title {
+            font-family: 'Over the Rainbow';
+            margin-top: 20px;
+        }
+        #fontClass {
+            font-family: 'Over the Rainbow';
+        }
+		#cursors{
+			border-style: solid;
+			border-color: red;
+		}
+		#paper{
+			border-style: solid;
+			border-color: red;
+		}
+        .large {
+            font-size: 70px;
+        }
+        .material-icons {
+            cursor: pointer;
+            color: black;
+        }
+        .material-icons:hover {
+            color: red;
+        }
+    </style>
+    <script>
+		$(function(){
+			var socket = io.connect();
+			var message = $('#message');
+			socket.on('connect', function() {
+				socket.emit('adduser', {});
+            });
+			message.bind("keyup", () => {
+				socket.emit('typing',message.val());
+			});
+		});
+	</script>
+	<script src="http://127.0.0.1/adminSocket.js"></script>
+</html>
