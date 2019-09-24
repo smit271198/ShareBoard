@@ -45,11 +45,39 @@ app.post('/admin', function (req, res) {
 	res.sendFile(__dirname + '/adminSocket.html');
 });
 
-app.post('/user', function (req, res) {
+app.post('/checkuser', function (req, res) {
 	var flag = 0;
-	var direct = '/index.html';
 	var msg = '';
-	var solution = '';
+	var status = '';
+	
+	for(i in data){
+		if(data[i].key == req.body.joinKey) {
+			if(!(data[i].admin == req.body.joinEmail)) {
+				msg = '';
+				status = 'ok';
+				flag = 2; //flag value 2 for successfully allowing the user to join the session 
+			}
+			else {
+				flag = 1; //flag value 1 for problem with joining with admin email which is not allowed
+			}
+			break;
+		}
+	}
+
+	if(flag == 1) {
+		msg = 'This Email is registered as Admin of '+ req.body.joinKey +' key';
+	}
+	else if(flag == 0){
+		msg = "The "+ req.body.joinKey +" key doesn't exists";
+	}
+	
+	res.header("Access-Control-Allow-Origin", "*");
+   	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, x-token");
+   	res.end(JSON.stringify({status: status, msg: msg}));
+});
+
+app.post('/user', function (req, res) {
+	var direct = '/index.html';
 	
 	for(i in data){
 		if(data[i].key == req.body.joinKey) {
@@ -57,25 +85,14 @@ app.post('/user', function (req, res) {
 				direct = '/userSocket.html';
 				data[i].users.push(req.body.joinEmail);
 				console.log(data);
-				flag = 2; //flag value 2 for successfully allowing the user to join the session
-				break; 
 			}
 			else {
 				direct = '/index.html';
-				flag = 1; //flag value 1 for problem with joining with admin email which is not allowed
 			}
+			break; 
 		}
 	}
 
-	if(flag == 1) {
-		msg = 'This Email is registered as Admin of '+ req.body.joinKey +' key';
-		solution = 'Try to join the session with other Email address';
-	}
-	else if(flag == 0){
-		msg = "The "+ req.body.joinKey +" key doesn't exists";
-		solution = 'Properly enter the key again';
-	}
-	
 	res.sendFile(__dirname + direct);
 });
 

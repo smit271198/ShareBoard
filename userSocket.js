@@ -3,11 +3,12 @@ var isEraser;
 var socket;
 
 function setup() {
-	canvas = createCanvas(1000, 500);
-	canvas.parent(document.getElementById('canvas-holder'));
+	canvas = createCanvas(800, 500);
+	canvas.parent('canvas-holder');
 	isEraser = false;
 
-	socket = io.connect('http://127.0.0.1');
+	socket = io.connect('http://127.0.0.1:80');
+	
 	socket.on('pencilClient', function(data){
 		stroke(data.color);
 		strokeWeight(data.stroke);
@@ -33,7 +34,7 @@ function setup() {
 	});
 
 	socket.on('clearCanvasClient', function(data){
-		canvas = createCanvas(1000, 500);
+		canvas = createCanvas(800, 500);
 		canvas.parent('canvas-holder');
 	});
 }

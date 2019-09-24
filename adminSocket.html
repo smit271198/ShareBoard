@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Text Conference</title>
+        <title>Shareboard-Admin</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -43,7 +43,7 @@
                     </div>
                 </div>
                 <div id="drawing" class="container tab-pane fade"><br>
-                    
+                    <h3>Drawing Space</h3>
                     <div id="sidebar">
 						<div class="toolsButtons">
 							<h3>Tools</h3>
@@ -54,8 +54,7 @@
 							<button id="eraser" class="btn btn-default"><i class='fas fa-eraser'></i></button>
 							<button id="rectangle" class="btn btn-default"><i class='far fa-square'></i></button>
 							<button id="cir" class="btn btn-default"><i class='far fa-circle'></i></button>
-							<button id="cir" class="btn btn-default"><i class='fas fa-redo-alt'></i></button>
-							<br>
+							<button id="clearCanvas" class="btn btn-danger" style="margin-top: 5px;"> <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span></button><br>
 							<div class="input-group">
 								<span class="input-group-addon">Stroke</span>
 								<input type="number" id="strokeValue" class="form-control" placeholder="sizeX" value="2" class="size">
@@ -65,10 +64,7 @@
 							</div>
 						</div>
 					</div>
-					<div id = "drawing-space">
-						<h3>Drawing Space</h3>
-						<div id="canvas-holder" class="canvas-holder" style="border: 1px solid"></div>
-					</div>
+					<div id="canvas-holder" class="canvas-holder"></div>
                 </div>
                 <div id="files" class="container tab-pane fade"><br>
                     <h3>Files</h3>
@@ -131,30 +127,6 @@
         .material-icons:hover {
             color: red;
         }
-		
-		#sidebar {
-			position: absolute;
-			left: 5%;
-			width: 150px;
-			top: 20;
-		}
-		button {
-			padding: 5px;
-		}
-		div {
-			padding: 2px;
-		}
-		#fileSection {
-			left: 80%;
-		    position: absolute;
-		    top: 10%;
-		}
-		#drawing-space {
-			position: relative;
-			left: 10%;
-			top: 5%;			
-			cursor: crosshair;
-		}
     </style>
     <script src="http://127.0.0.1/adminSocket.js"></script>
 </html>
