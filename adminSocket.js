@@ -4,10 +4,10 @@ var socket;
 var startX, startY, endX, endY;
 var selectedColor, strokeValue;
 function setup() {
-	canvas = createCanvas(800, 500);
+	canvas = createCanvas(1000, 500);
 	canvas.parent(document.getElementById('canvas-holder'));
 
-	socket = io.connect('http://127.0.0.1:80');
+	socket = io.connect('http://'+document.domain+':'+location.port);
 
 	selectedColor = document.getElementById('colorpicker').value;
 	strokeValue = document.getElementById('strokeValue').value;
@@ -35,7 +35,7 @@ document.getElementById('cir').addEventListener('click', function() {
 });
 
 document.getElementById('clearCanvas').addEventListener('click', function() {
-	canvas = createCanvas(800, 500);
+	canvas = createCanvas(1000, 500);
 	canvas.parent('canvas-holder');
 	socket.emit('clear_canvas', {});
 });
