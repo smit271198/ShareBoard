@@ -4,6 +4,15 @@
         <title>Text Conference</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Over+the+Rainbow" rel="stylesheet">
+    	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+	    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>	    
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js"></script>
+		<script src='https://kit.fontawesome.com/a076d05399.js'></script>
     </head>
     <body>
         <center><h1 id="title"><span class="large">S</span>hare<span class="large">B</span>oard</h1></center>
@@ -31,16 +40,15 @@
                     <div id="message" placeholder="Place to write" ></div>
                 </div>
                 <div id="drawing" class="container tab-pane fade"><br>
-                    <h3>Drawing Space</h3>
-                    <p>Coming Soon...</p>
-					<canvas id="paper" width="900" height="500">
-						Your browser needs to support canvas for this to work!
-					</canvas>
-					<hgroup id="instructions">
-						<h3>Draw anywhere!</h3>
-						<h3>You will see everyone else who's doing the same.</h3>
-						<h3>Tip: if the stage gets dirty, simply reload the page</h3>
-					</hgroup>
+                
+					<div id = "drawing-space">
+						<div class="row">
+							<div class="col-sm"><h3>Drawing Space</h3></div>
+							<div class="col-sm"><a class="btn btn-success float-right" float="right" id="download">Download</a></div>
+						</div>
+						
+						<div id="canvas-holder" class="canvas-holder" style="border: 1px solid"></div>
+					</div>
                 </div>
                 <div id="files" class="container tab-pane fade"><br>
                     <h3>Files</h3>
@@ -92,80 +100,26 @@
         .material-icons:hover {
             color: green;
         }
+		
+		button {
+			padding: 5px;
+		}
+		div {
+			padding: 2px;
+		}
+		#fileSection {
+			left: 80%;
+		    position: absolute;
+		    top: 10%;
+		}
+		#drawing-space {
+			position: relative;
+			left: 5%;
+			top: 5%;
+			
+			cursor: crosshair;
+		}
+		
     </style>
-    <script>
-        $(function(){
-			var socket = io.connect();
-			var message = $('#message');
-			
-			socket.on('typing',function(data){
-				message.html(data.msg);			
-			});
-			var doc = $(document),
-				win = $(window),
-				canvas = $('#paper'),
-				ctx = canvas[0].getContext('2d'),
-				instructions = $('#instructions');
-				
-			var id = Math.round($.now()*Math.random());
-
-			// A flag for drawing activity
-			var drawing = false;
-
-			var clients = {};
-			var cursors = {};
-
-			//var socket = io.connect(url)
-			socket.on('moving', function (data) {
-
-				if(! (data.id in clients)){
-					// a new user has come online. create a cursor for them
-					cursors[data.id] = $('<div class="cursor">').appendTo('#cursors');
-				}
-
-				// Move the mouse pointer
-				cursors[data.id].css({
-					'left' : data.x,
-					'top' : data.y
-				});
-
-				// Is the user drawing?
-				if(data.drawing && clients[data.id]){
-
-					// Draw a line on the canvas. clients[data.id] holds
-					// the previous position of this user's mouse pointer
-
-					drawLine(clients[data.id].x, clients[data.id].y, data.x, data.y);
-				}
-
-				// Saving the current client state
-				clients[data.id] = data;
-				clients[data.id].updated = $.now();
-			});
-			
-			// Remove inactive clients after 10 seconds of inactivity
-			setInterval(function(){
-
-				for(ident in clients){
-					if($.now() - clients[ident].updated > 10000){
-
-						// Last update was more than 10 seconds ago.
-						// This user has probably closed the page
-
-						cursors[ident].remove();
-						delete clients[ident];
-						delete cursors[ident];
-					}
-				}
-
-			},10000);
-
-			function drawLine(fromx, fromy, tox, toy){
-				ctx.moveTo(fromx, fromy);
-				ctx.lineTo(tox, toy);
-				ctx.stroke();
-			}
-			
-		});
-    </script>
+	<script src="http://127.0.0.1/userSocket.js"></script>
 </html>
