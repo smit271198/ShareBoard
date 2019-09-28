@@ -1,3 +1,4 @@
+var message = $('#message');
 var canvas;
 var elementID;
 var socket;
@@ -7,7 +8,8 @@ function setup() {
 	canvas = createCanvas(800, 500);
 	canvas.parent(document.getElementById('canvas-holder'));
 
-	//socket = io.connect('http://127.0.0.1:80');
+	socket = io.connect('http://127.0.0.1:80');
+	socket.emit('adduser', {});
 	selectedColor = document.getElementById('colorpicker').value;
 	strokeValue = document.getElementById('strokeValue').value;
 }
@@ -16,6 +18,10 @@ function downloadCanvas(link, filename) {
 	link.href = document.getElementById('defaultCanvas0').toDataURL();
 	link.download = filename;
 }
+
+message.on('keyup', function( e ) {
+	socket.emit('typing',message.val());
+});
 
 document.getElementById('pencil').addEventListener('click', function() {
 	elementID = 0;

@@ -128,17 +128,5 @@
             color: red;
         }
     </style>
-    <script>
-		$(function(){
-			var socket = io.connect();
-			var message = $('#message');
-			socket.on('connect', function() {
-				socket.emit('adduser', {});
-            });
-			message.bind("keyup", () => {
-				socket.emit('typing',message.val());
-			});
-		});
-	</script>
 	<script src="http://127.0.0.1/adminSocket.js"></script>
 </html>

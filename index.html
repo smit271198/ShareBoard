@@ -166,8 +166,13 @@
 			}
 		}
 	</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>	  
 	<script type="text/javascript">
 		$(function(){
+			socket = io.connect('http://127.0.0.1:80');
 			var key = /(?=.*\d)(?=.*[a-zA-Z]).{6,}/;
 			var flag = true;
 			$('.alert').hide();
@@ -178,11 +183,13 @@
 				flag = true;
 			});
 			$('#createEmail').keypress(function(event) {
-				if(event.which == 13) {
+				if(event.which == 13) {	
+					socket.emit('email', $('#createEmail').val());
+					socket.emit('Identity', $('#createEmail').val());
 					$('#create-form-data').attr('action', 'http://' + document.domain + ':' + location.port + '/admin')
 					$('#createKey').show('slow').focus();
 					flag = false;
-				}
+				}				
 			});
 			$('#createKey').keypress(function(event) {
 				if(event.which == 13) {
@@ -212,9 +219,8 @@
 	    				});
 					}
 				}
-			});
+			});			
 			
-
 			//code for joining the session
 			$('#joinRoom').on('click', function(){
 				$('#joinModal').modal('show');

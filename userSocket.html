@@ -72,6 +72,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 	<script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+	
     <style type="text/css">
         #title {
             font-family: 'Over the Rainbow';
@@ -94,16 +95,6 @@
             color: green;
         }
     </style>
-    <script>
-        $(function(){
-			var socket = io.connect();
-			var message = $('#message');
-			socket.on('connect', function() {
-				socket.emit('adduser', {});
-            });
-			socket.on('typing',function(data){
-				message.html(data.msg);			
-			});
-		});
-    </script>
+	<script src="http://127.0.0.1/userSocket.js"></script>
+	
 </html>
