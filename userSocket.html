@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Text Conference</title>
+        <title>ShareBoard-User</title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
         <link href="https://fonts.googleapis.com/css?family=Over+the+Rainbow" rel="stylesheet">
-    	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-	    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-	    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>	    
-		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js"></script>
-		<script src='https://kit.fontawesome.com/a076d05399.js'></script>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>     
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js"></script>
+        <script src='https://kit.fontawesome.com/a076d05399.js'></script>
     </head>
     <body>
         <center><h1 id="title"><span class="large">S</span>hare<span class="large">B</span>oard</h1></center>
         <div class="container">
-            <center><h3 id="fontClass">Room: {{room}}</h3></center>
+            <center><h3 id="fontClass">Key: <span id="key"><%= key %></span></h3></center>
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#text">Text</a>
+                    <a class="nav-link active" data-toggle="tab" href="#typing">Text</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" data-toggle="tab" href="#drawing">Drawing</a>
@@ -35,20 +35,20 @@
 
             <!-- Tab panes -->
             <div class="tab-content">
-                <div id="text" class="container tab-pane active"><br>
+                <div id="typing" class="container tab-pane active"><br>
                     <h3>Text</h3><br>
-                    <div id="message" placeholder="Place to write" ></div>
+                    <textarea class="form-control rounded-lg" rows="15" id="message" readonly></textarea>
                 </div>
                 <div id="drawing" class="container tab-pane fade"><br>
                 
-					<div id = "drawing-space">
-						<div class="row">
-							<div class="col-sm"><h3>Drawing Space</h3></div>
-							<div class="col-sm"><a class="btn btn-success float-right" float="right" id="download">Download</a></div>
-						</div>
-						
-						<div id="canvas-holder" class="canvas-holder" style="border: 1px solid"></div>
-					</div>
+                    <div id = "drawing-space">
+                        <div class="row">
+                            <div class="col-sm"><h3>Drawing Space</h3></div>
+                            <div class="col-sm"><a class="btn btn-success float-right" float="right" id="download">Download</a></div>
+                        </div>
+                        
+                        <div id="canvas-holder" class="canvas-holder" style="border: 1px solid"></div>
+                    </div>
                 </div>
                 <div id="files" class="container tab-pane fade"><br>
                     <h3>Files</h3>
@@ -66,6 +66,8 @@
                 </div>
                 <div id="setting" class="container tab-pane fade"><br>
                     <h3>Settings</h3><br>
+                    <h5>Email: <span id="userEmail"><%= email %></span></h5><br>
+                    <h5>Key: <%= key %></h5><br>
                     <input type="button" id="leave" value="Leave" class="btn btn-danger">
                 </div>
             </div>
@@ -77,8 +79,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-	<script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
     <style type="text/css">
         #title {
             font-family: 'Over the Rainbow';
@@ -100,26 +102,26 @@
         .material-icons:hover {
             color: green;
         }
-		
-		button {
-			padding: 5px;
-		}
-		div {
-			padding: 2px;
-		}
-		#fileSection {
-			left: 80%;
-		    position: absolute;
-		    top: 10%;
-		}
-		#drawing-space {
-			position: relative;
-			left: 5%;
-			top: 5%;
-			
-			cursor: crosshair;
-		}
-		
+        
+        button {
+            padding: 5px;
+        }
+        div {
+            padding: 2px;
+        }
+        #fileSection {
+            left: 80%;
+            position: absolute;
+            top: 10%;
+        }
+        #drawing-space {
+            position: relative;
+            left: 5%;
+            top: 5%;
+            
+            cursor: crosshair;
+        }
+        
     </style>
-	<script src="userSocket.js"></script>
+    <script src="userSocket.js"></script>
 </html>
